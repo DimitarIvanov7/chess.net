@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApplication3.Data;
+using WebApplication3.Mappings;
+using WebApplication3.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ChessDbContext>(options => options.
 UseSqlServer(builder.Configuration.GetConnectionString("ChessConnectionString")));
+
+
+builder.Services.AddScoped<IPlayerRepository, PlayerRepositoryMySql>();
+
+builder.Services.AddAutoMapper(typeof (AutomapperProfiles));
     
 var app = builder.Build();
 

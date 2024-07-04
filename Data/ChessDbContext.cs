@@ -10,35 +10,35 @@ namespace WebApplication3.Data
         }
 
 
-        public DbSet<Players> Players { get; set; }
+        public DbSet<Player> Player { get; set; }
 
         public DbSet<GameType> GameTypes { get; set; }
 
-        public DbSet<Games> Games { get; set; }
+        public DbSet<Game> Game { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure the Games and Players relationship
-            modelBuilder.Entity<Games>()
+            modelBuilder.Entity<Game>()
                 .HasOne(g => g.blackPlayer)
                 .WithMany()
                 .HasForeignKey(g => g.blackPlayerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Games>()
+            modelBuilder.Entity<Game>()
                 .HasOne(g => g.whitePlayer)
                 .WithMany()
                 .HasForeignKey(g => g.whitePlayerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Games>()
+            modelBuilder.Entity<Game>()
                 .HasOne(g => g.winner)
                 .WithMany()
                 .HasForeignKey(g => g.winnerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Games>()
+            modelBuilder.Entity<Game>()
                 .HasOne(g => g.gameType)
                 .WithMany()
                 .HasForeignKey(g => g.gameTypeId)

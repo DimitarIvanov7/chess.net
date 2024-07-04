@@ -1,5 +1,5 @@
 ﻿
-    public class Players
+    public class Player
     {
         public Guid Id { get; set; }
 

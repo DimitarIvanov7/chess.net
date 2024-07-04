@@ -1,5 +1,5 @@
 ﻿
-    public class Games
+    public class Game
     {
 
         public Guid Id { get; set; }
@@ -12,11 +12,11 @@
         public Guid gameTypeId { get; set; }
         public DateTime? gameTime { get; set; }
 
-        public Players whitePlayer { get; set;  }
+        public Player whitePlayer { get; set;  }
 
-        public Players blackPlayer { get; set; }
+        public Player blackPlayer { get; set; }
 
-        public Players winner { get; set; }
+        public Player winner { get; set; }
 
     public GameType gameType { get; set; }
 
