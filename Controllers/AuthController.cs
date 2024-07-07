@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication3.Model.DTO;
 using WebApplication3.Repositories;
 
+
 namespace WebApplication3.Controllers
 {
     [Route("api/[controller]")]
@@ -27,8 +28,7 @@ namespace WebApplication3.Controllers
         public async Task<IActionResult> Register([FromBody] AddPlayerDto player)
         {
 
-            try
-            {
+           
                 if (player == null)
                     return BadRequest();
 
@@ -58,14 +58,6 @@ namespace WebApplication3.Controllers
 
                 return BadRequest("User or password is incorrect");
 
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Something went wrong during registration");
-            }
-
-
         }
 
 
@@ -78,8 +70,7 @@ namespace WebApplication3.Controllers
         public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto loginDto)
         {
 
-            try
-            {
+           
                 var user = await userManager.FindByNameAsync(loginDto.UserName);
 
 
@@ -109,21 +100,6 @@ namespace WebApplication3.Controllers
                 }
 
                 return BadRequest("User or password is incorrect");
-
-
-
-            }
-
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                        "User or password is incorrect");
-            }
-
-
-
-
-
 
         }
 

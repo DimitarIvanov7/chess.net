@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using WebApplication3.Model.DTO;
 using WebApplication3.Repositories;
 
@@ -16,12 +17,14 @@ namespace WebApplication3.Controllers
 
         private readonly IPlayerRepository playerRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<PlayerController> logger;
 
-        public PlayerController(IPlayerRepository playerRepository, IMapper mapper)
+        public PlayerController(IPlayerRepository playerRepository, IMapper mapper, ILogger<PlayerController> logger)
    
         {
             this.playerRepository = playerRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
 
@@ -29,15 +32,25 @@ namespace WebApplication3.Controllers
         [Authorize(Roles = "Reader,Writer")]
         public async Task<ActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string?  sortBy = null, [FromQuery] bool? isAscending = true, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-        
-            var playersDomain = await this.playerRepository.GetListAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
+
+     
+
+                logger.LogInformation("GetAllUser action method was envoked");
+
+                var playersDomain = await playerRepository.GetListAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
 
 
-            var playersDto = mapper.Map<List<PlayerResponseDto>>(playersDomain);
+                var playersDto = mapper.Map<List<PlayerResponseDto>>(playersDomain);
 
 
-            return Ok(playersDto);
+                logger.LogInformation($"Finished getAllUsers method with data: {JsonSerializer.Serialize(playersDto)}");
+
+
+
+                return Ok(playersDto);
+
+          
         }
 
         [HttpGet]
@@ -46,9 +59,8 @@ namespace WebApplication3.Controllers
 
         public async Task<ActionResult<PlayerResponseDto>> GetPlayerById([FromRoute] Guid id)
         {
-            try
-            {
-                var playerDomain = await this.playerRepository.GetByIdAsync(id);
+            
+                var playerDomain = await playerRepository.GetByIdAsync(id);
 
                 if (playerDomain == null) return NotFound();
 
@@ -56,41 +68,27 @@ namespace WebApplication3.Controllers
                 var playersDto = mapper.Map<PlayerResponseDto>(playerDomain);
 
                 return Ok(playersDto);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retrieving data from the database");
-            }
+            
+            
         }
 
         [HttpPost]
         [Authorize(Roles = "Writer")]
-
         public async Task<ActionResult<PlayerResponseDto>> CreatePlayer(AddPlayerDto player)
         {
-            try
-            {
+           
                 if (player == null)
                     return BadRequest();
 
                 var playerDomainModel = mapper.Map<Player>(player);
 
-                await this.playerRepository.CreateAsync(playerDomainModel);
-
-
+                await playerRepository.CreateAsync(playerDomainModel);
 
                 var createdPlayerDto = mapper.Map<PlayerResponseDto>(playerDomainModel);
 
 
                 return CreatedAtAction(nameof(GetPlayerById),
                     new { id = createdPlayerDto.Id}, createdPlayerDto);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error creating new Player record");
-            }
         }
 
 
@@ -101,8 +99,7 @@ namespace WebApplication3.Controllers
 
         public async Task<ActionResult<PlayerResponseDto>> UpdatePlayer([FromRoute] Guid id, UpdatePlayerDto player)
         {
-            try
-            {
+           
                if (player == null )
                 {
                     return BadRequest();
@@ -110,7 +107,7 @@ namespace WebApplication3.Controllers
 
                 var newPlayer = mapper.Map<Player>(player);
 
-                var updatedPlayer = await this.playerRepository.UpdateAsync(id, newPlayer);
+                var updatedPlayer = await playerRepository.UpdateAsync(id, newPlayer);
 
                 if (updatedPlayer == null)
                     return NotFound();
@@ -118,13 +115,7 @@ namespace WebApplication3.Controllers
 
                 var playerDto = mapper.Map<PlayerResponseDto>(updatedPlayer);
 
-                return Ok(playerDto);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error updating Player record");
-            }
+            return Ok(playerDto);
 
         }
 
@@ -137,26 +128,15 @@ namespace WebApplication3.Controllers
         public async Task<ActionResult> DeletePlayer([FromRoute] Guid id)
         {
 
-            try { 
-
             var foundPlayer = await this.playerRepository.GetByIdAsync(id);
 
 
             if (foundPlayer == null) return NotFound();
 
-             await this.playerRepository.Delete(foundPlayer);
-
-
+             await playerRepository.Delete(foundPlayer);
 
             return Ok();
 
-
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting Player record");
-            }
 
         }
     }

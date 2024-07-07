@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApplication3.Model.Domain;
 
 namespace WebApplication3.Data
 {
@@ -15,6 +16,8 @@ namespace WebApplication3.Data
         public DbSet<GameType> GameTypes { get; set; }
 
         public DbSet<Game> Games { get; set; }
+
+        public DbSet<Image> Images { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
