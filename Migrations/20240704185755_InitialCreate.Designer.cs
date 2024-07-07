@@ -12,8 +12,8 @@ using WebApplication3.Data;
 namespace WebApplication3.Migrations
 {
     [DbContext(typeof(ChessDbContext))]
-    [Migration("20240622112412_test")]
-    partial class test
+    [Migration("20240704185755_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,30 +25,7 @@ namespace WebApplication3.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GameType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GameTypes");
-                });
-
-            modelBuilder.Entity("Games", b =>
+            modelBuilder.Entity("Game", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,10 +56,33 @@ namespace WebApplication3.Migrations
 
                     b.HasIndex("winnerId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Game");
                 });
 
-            modelBuilder.Entity("Players", b =>
+            modelBuilder.Entity("GameType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameTypes");
+                });
+
+            modelBuilder.Entity("Player", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,12 +102,12 @@ namespace WebApplication3.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Players");
+                    b.ToTable("Player");
                 });
 
-            modelBuilder.Entity("Games", b =>
+            modelBuilder.Entity("Game", b =>
                 {
-                    b.HasOne("Players", "blackPlayer")
+                    b.HasOne("Player", "blackPlayer")
                         .WithMany()
                         .HasForeignKey("blackPlayerId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -119,13 +119,13 @@ namespace WebApplication3.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Players", "whitePlayer")
+                    b.HasOne("Player", "whitePlayer")
                         .WithMany()
                         .HasForeignKey("whitePlayerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Players", "winner")
+                    b.HasOne("Player", "winner")
                         .WithMany()
                         .HasForeignKey("winnerId")
                         .OnDelete(DeleteBehavior.NoAction)

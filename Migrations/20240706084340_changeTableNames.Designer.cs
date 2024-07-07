@@ -12,8 +12,8 @@ using WebApplication3.Data;
 namespace WebApplication3.Migrations
 {
     [DbContext(typeof(ChessDbContext))]
-    [Migration("20240702115640_RenameTablesSingular")]
-    partial class RenameTablesSingular
+    [Migration("20240706084340_changeTableNames")]
+    partial class changeTableNames
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,7 +56,7 @@ namespace WebApplication3.Migrations
 
                     b.HasIndex("winnerId");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("GameType", b =>
@@ -102,7 +102,7 @@ namespace WebApplication3.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Player");
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("Game", b =>

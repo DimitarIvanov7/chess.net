@@ -5,16 +5,16 @@ namespace WebApplication3.Data
     public class ChessDbContext : DbContext
     {
 
-        public ChessDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public ChessDbContext(DbContextOptions<ChessDbContext> dbContextOptions) : base(dbContextOptions)
         {
         }
 
 
-        public DbSet<Player> Player { get; set; }
+        public DbSet<Player> Players { get; set; }
 
         public DbSet<GameType> GameTypes { get; set; }
 
-        public DbSet<Game> Game { get; set; }
+        public DbSet<Game> Games { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

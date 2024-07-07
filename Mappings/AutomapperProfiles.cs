@@ -10,7 +10,7 @@ namespace WebApplication3.Mappings
         public AutomapperProfiles()
         {
 
-            CreateMap<Player, PlayerDto>()
+            CreateMap<Player, PlayerResponseDto>()
                 .ReverseMap();
 
             CreateMap<AddPlayerDto, Player>()

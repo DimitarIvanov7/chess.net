@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication3.Data;
 using WebApplication3.Model.DTO;
 using WebApplication3.Repositories;
 
@@ -9,6 +9,7 @@ namespace WebApplication3.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    
     public class PlayerController : Controller
     {
 
@@ -25,14 +26,15 @@ namespace WebApplication3.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> GetAllUsers()
+        [Authorize(Roles = "Reader,Writer")]
+        public async Task<ActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string?  sortBy = null, [FromQuery] bool? isAscending = true, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
         
-            var playersDomain = await this.playerRepository.ToListAsync();
+            var playersDomain = await this.playerRepository.GetListAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
 
 
-            var playersDto = mapper.Map<List<PlayerDto>>(playersDomain);
+            var playersDto = mapper.Map<List<PlayerResponseDto>>(playersDomain);
 
 
             return Ok(playersDto);
@@ -40,7 +42,9 @@ namespace WebApplication3.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<ActionResult<PlayerDto>> GetPlayerById([FromRoute] Guid id)
+        [Authorize(Roles = "Reader, Writer")]
+
+        public async Task<ActionResult<PlayerResponseDto>> GetPlayerById([FromRoute] Guid id)
         {
             try
             {
@@ -49,7 +53,7 @@ namespace WebApplication3.Controllers
                 if (playerDomain == null) return NotFound();
 
 
-                var playersDto = mapper.Map<PlayerDto>(playerDomain);
+                var playersDto = mapper.Map<PlayerResponseDto>(playerDomain);
 
                 return Ok(playersDto);
             }
@@ -61,7 +65,9 @@ namespace WebApplication3.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PlayerDto>> CreatePlayer(AddPlayerDto player)
+        [Authorize(Roles = "Writer")]
+
+        public async Task<ActionResult<PlayerResponseDto>> CreatePlayer(AddPlayerDto player)
         {
             try
             {
@@ -70,11 +76,11 @@ namespace WebApplication3.Controllers
 
                 var playerDomainModel = mapper.Map<Player>(player);
 
-                await this.playerRepository.AddAsync(playerDomainModel);
+                await this.playerRepository.CreateAsync(playerDomainModel);
 
 
 
-                var createdPlayerDto = mapper.Map<PlayerDto>(playerDomainModel);
+                var createdPlayerDto = mapper.Map<PlayerResponseDto>(playerDomainModel);
 
 
                 return CreatedAtAction(nameof(GetPlayerById),
@@ -91,7 +97,9 @@ namespace WebApplication3.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<ActionResult<PlayerDto>> UpdatePlayer([FromRoute] Guid id, UpdatePlayerDto player)
+        [Authorize(Roles = "Writer")]
+
+        public async Task<ActionResult<PlayerResponseDto>> UpdatePlayer([FromRoute] Guid id, UpdatePlayerDto player)
         {
             try
             {
@@ -108,7 +116,7 @@ namespace WebApplication3.Controllers
                     return NotFound();
 
 
-                var playerDto = mapper.Map<PlayerDto>(updatedPlayer);
+                var playerDto = mapper.Map<PlayerResponseDto>(updatedPlayer);
 
                 return Ok(playerDto);
             }
@@ -124,6 +132,8 @@ namespace WebApplication3.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
+
         public async Task<ActionResult> DeletePlayer([FromRoute] Guid id)
         {
 
@@ -134,7 +144,7 @@ namespace WebApplication3.Controllers
 
             if (foundPlayer == null) return NotFound();
 
-             await this.playerRepository.Remove(foundPlayer);
+             await this.playerRepository.Delete(foundPlayer);
 
 
 

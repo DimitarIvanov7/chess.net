@@ -53,7 +53,7 @@ namespace WebApplication3.Migrations
 
                     b.HasIndex("winnerId");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("GameType", b =>
@@ -99,7 +99,7 @@ namespace WebApplication3.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Player");
+                    b.ToTable("Players");
                 });
 
             modelBuilder.Entity("Game", b =>

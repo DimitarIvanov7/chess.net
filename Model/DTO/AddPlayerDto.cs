@@ -20,5 +20,8 @@ namespace WebApplication3.Model.DTO
         [PasswordComplexity(ErrorMessage = "Password must have at least one uppercase letter, one lowercase letter, one digit, and one special character")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+
+        public string[] Roles { get; set; }
     }
 }
