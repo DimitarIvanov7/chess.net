@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApplication3.Model.Domain;
 
 namespace WebApplication3.Repositories
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication3.Model.Domain;
 
+
 namespace WebApplication3.Data
 {
     public class ChessDbContext : DbContext

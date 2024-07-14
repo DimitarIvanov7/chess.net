@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Xml;
 using WebApplication3.Data;
+using WebApplication3.Model.Domain;
 using WebApplication3.Model.DTO;
 
 namespace WebApplication3.Repositories

@@ -1,4 +1,5 @@
-﻿
+﻿namespace WebApplication3.Model.Domain { 
+
     public class Game
     {
 
@@ -26,4 +27,6 @@
 
 
     }
+
+}
 

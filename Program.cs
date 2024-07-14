@@ -10,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 using WebApplication3.Middlewares;
+using WebApplication3.Hubs;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,11 +85,12 @@ UseSqlServer(builder.Configuration.GetConnectionString("ChessConnectionString"))
 builder.Services.AddDbContext<AuthDbContext>(options => options.
 UseSqlServer(builder.Configuration.GetConnectionString("ChessAuthConnectionString")));
 
+builder.Services.AddSignalR();
+
 
 builder.Services.AddScoped<IPlayerRepository, PlayerRepositoryMySql>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IimageRepository, LocalImageRepository>();
-
 
 
 builder.Services.AddAutoMapper(typeof (AutomapperProfiles));
@@ -119,7 +122,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+
+    app.UseCors(x => x
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(origin => true) // allow any origin
+        .AllowCredentials()); // allow credentials
 }
+
+app.UseRouting();
+ 
+
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 
@@ -132,6 +146,12 @@ app.UseStaticFiles(new StaticFileOptions {
     RequestPath = "/Images"
 });
 
-app.MapControllers();
+
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<GameHub>("/gameHub"); // Map SignalR hubs
+});
 
 app.Run();

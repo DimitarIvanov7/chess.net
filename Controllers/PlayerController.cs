@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using WebApplication3.Model.DTO;
 using WebApplication3.Repositories;
+using WebApplication3.Model.Domain;
+
 
 namespace WebApplication3.Controllers
 {
@@ -13,8 +15,6 @@ namespace WebApplication3.Controllers
     
     public class PlayerController : Controller
     {
-
-
         private readonly IPlayerRepository playerRepository;
         private readonly IMapper mapper;
         private readonly ILogger<PlayerController> logger;
@@ -33,20 +33,14 @@ namespace WebApplication3.Controllers
         public async Task<ActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string?  sortBy = null, [FromQuery] bool? isAscending = true, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
 
-     
-
                 logger.LogInformation("GetAllUser action method was envoked");
 
                 var playersDomain = await playerRepository.GetListAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
-
-
 
                 var playersDto = mapper.Map<List<PlayerResponseDto>>(playersDomain);
 
 
                 logger.LogInformation($"Finished getAllUsers method with data: {JsonSerializer.Serialize(playersDto)}");
-
-
 
                 return Ok(playersDto);
 
@@ -128,7 +122,7 @@ namespace WebApplication3.Controllers
         public async Task<ActionResult> DeletePlayer([FromRoute] Guid id)
         {
 
-            var foundPlayer = await this.playerRepository.GetByIdAsync(id);
+            var foundPlayer = await playerRepository.GetByIdAsync(id);
 
 
             if (foundPlayer == null) return NotFound();

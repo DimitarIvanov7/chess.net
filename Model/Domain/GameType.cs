@@ -1,4 +1,6 @@
 ﻿
+namespace WebApplication3.Model.Domain
+{
     public class GameType
     {
         public Guid Id { get; set; }
@@ -12,3 +14,5 @@
 
     }
 
+
+}

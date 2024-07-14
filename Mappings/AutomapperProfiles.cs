@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WebApplication3.Model.DTO;
+using WebApplication3.Model.Domain;
 
 
 namespace WebApplication3.Mappings
