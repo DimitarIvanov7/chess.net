@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.Extensions.Hosting;
+
 namespace WebApplication3.Model.Domain
 {
     public class Player
@@ -10,6 +12,7 @@ namespace WebApplication3.Model.Domain
         public string Email { get; set; }
 
         public string Password { get; set; }
+        public int Elo { get; set; } = 100;
 
 
     }

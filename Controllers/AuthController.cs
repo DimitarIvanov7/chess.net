@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication3.Model.DTO;
+using WebApplication3.Model.DTO.Auth;
+using WebApplication3.Model.DTO.Player;
 using WebApplication3.Repositories;
 
 
@@ -56,7 +57,7 @@ namespace WebApplication3.Controllers
 
                 }
 
-                return BadRequest("User or password is incorrect");
+                return BadRequest("Something went wrong");
 
         }
 

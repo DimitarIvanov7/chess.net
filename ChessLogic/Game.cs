@@ -7,7 +7,6 @@ namespace WebApplication3.ChessLogic
    
         public List<string> MoveSequence;
         public BoardSquare[,] Board;
-        public List<BoardSquare[,]> PreviousGameStates;
         public Colors? WinnerColor;
         public Dictionary<Colors, Player>? Players;
         public Colors Turn;
@@ -22,9 +21,7 @@ namespace WebApplication3.ChessLogic
   
             MoveSequence = new List<string>();
             Board = CoordinatesHelper.CreateInitialBoard();
-            PreviousGameStates = new List<BoardSquare[,]>();
             WinnerColor = null;
-
             Turn = Colors.White;
             EnPassantCoordinates = null;
             PromotionPiece = null;
@@ -33,15 +30,30 @@ namespace WebApplication3.ChessLogic
             BoardSeriliazations = new List<string>();
         }
 
-        public void AddPlayers(Player whitePlayer, Player blackPlayer)
+        public void AddPlayer(Player player)
         {
+            if (Players?.Count == 2) return;
 
-            Players = new Dictionary<Colors, Player> {
+            if (Players?.Count == 1) {
+                Colors color = MainConstants.OpositeColorMapping[Players.First().Value.Color];
 
-                { Colors.White, whitePlayer},
-                {Colors.Black, blackPlayer},
+                Players?.Add(color, player);
 
-            };
+                StartGame();
+                return;
+            }
+
+            Array values = Enum.GetValues(typeof(Colors));
+
+            Random random = new Random();
+
+            int randomIndex = random.Next(values.Length);
+
+            Colors randomColor = (Colors)values.GetValue(randomIndex);
+
+
+            Players?.Add(randomColor, player);
+
             
         }
 
@@ -153,6 +165,9 @@ namespace WebApplication3.ChessLogic
         {
             PlayState = new PlayState { Type = PlayStateTypes.Running };
             Players?[Colors.White]?.Timer.Start();
+            Turn = Colors.White;
+
+            NotifyStateChange();
         }
 
         public void StopGame(PlayState state, Colors? winner = null)
@@ -161,6 +176,8 @@ namespace WebApplication3.ChessLogic
             Players?[Colors.White]?.Timer.Stop();
             Players?[Colors.Black]?.Timer.Stop();
             WinnerColor = winner;
+
+            NotifyStateChange();
         }
 
         public void CheckGameOver()

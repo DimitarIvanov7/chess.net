@@ -1,4 +1,4 @@
-﻿namespace WebApplication3.Model.DTO
+﻿namespace WebApplication3.Model.DTO.PlayerDto
 {
     public class PlayerResponseDto
     {
@@ -9,7 +9,7 @@
 
         public string Email { get; set; }
 
-      
+
 
 
 

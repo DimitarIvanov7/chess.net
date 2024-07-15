@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using WebApplication3.Model.DTO;
 using WebApplication3.Model.Domain;
+using WebApplication3.Model.DTO.Player;
 
 
 namespace WebApplication3.Mappings

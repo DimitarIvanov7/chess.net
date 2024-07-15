@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using WebApplication3.Model.Validation;
 
-namespace WebApplication3.Model.DTO
+namespace WebApplication3.Model.DTO.PlayerDto
 {
-    public class AddPlayerDto
+    public class UpdatePlayerDto
     {
         [Required]
         [MinLength(5, ErrorMessage = "User name must be at least 5 characters long")]
@@ -11,7 +11,7 @@ namespace WebApplication3.Model.DTO
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage ="Invalid email address")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
 
         public string Email { get; set; }
 
@@ -20,8 +20,5 @@ namespace WebApplication3.Model.DTO
         [PasswordComplexity(ErrorMessage = "Password must have at least one uppercase letter, one lowercase letter, one digit, and one special character")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-
-        public string[] Roles { get; set; }
     }
 }
