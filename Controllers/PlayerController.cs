@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using WebApplication3.Repositories;
 using WebApplication3.Model.Domain;
 using WebApplication3.Model.DTO.Player;
+using WebApplication3.Data.Repositories;
 
 
 namespace WebApplication3.Controllers

@@ -4,9 +4,9 @@ using WebApplication3.Data;
 using WebApplication3.Model.Domain;
 using WebApplication3.Model.DTO;
 
-namespace WebApplication3.Repositories
+namespace WebApplication3.Data.Repositories
 {
-    public class PlayerRepositoryMySql: IPlayerRepository
+    public class PlayerRepositoryMySql : IPlayerRepository
     {
         private readonly ChessDbContext dbContext;
 
@@ -22,7 +22,8 @@ namespace WebApplication3.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Player>> GetListAsync(string? filterOn =null, string? filterQuery = null,string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10) {
+        public async Task<List<Player>> GetListAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
+        {
 
             var players = dbContext.Players.AsQueryable();
 
@@ -30,16 +31,17 @@ namespace WebApplication3.Repositories
             {
 
 
-                if(filterOn.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+                if (filterOn.Equals("UserName", StringComparison.OrdinalIgnoreCase))
                 {
-                    players  = players.Where(x => x.UserName.Contains(filterQuery));
+                    players = players.Where(x => x.UserName.Contains(filterQuery));
                 }
 
-             
+
 
             }
 
-            if (string.IsNullOrWhiteSpace(sortBy) == false) {
+            if (string.IsNullOrWhiteSpace(sortBy) == false)
+            {
 
                 if (sortBy.Equals("UserName", StringComparison.OrdinalIgnoreCase))
                 {
@@ -54,18 +56,19 @@ namespace WebApplication3.Repositories
                 }
 
 
-               
+
             }
 
 
-            int skipResults = (pageNumber - 1) * pageSize; 
-            
-             return await players.Skip(skipResults).Take(pageSize).ToListAsync();
+            int skipResults = (pageNumber - 1) * pageSize;
+
+            return await players.Skip(skipResults).Take(pageSize).ToListAsync();
         }
 
-        public async Task<Player> GetByIdAsync(Guid id) {
+        public async Task<Player> GetByIdAsync(Guid id)
+        {
 
-            var found =  await dbContext.Players.FirstOrDefaultAsync(x => x.Id  == id);
+            var found = await dbContext.Players.FirstOrDefaultAsync(x => x.Id == id);
 
             if (found == null) return null;
 
@@ -74,7 +77,8 @@ namespace WebApplication3.Repositories
 
 
 
-        public async Task CreateAsync(Player playerDomainModel) {
+        public async Task CreateAsync(Player playerDomainModel)
+        {
 
             await dbContext.AddAsync(playerDomainModel);
 
@@ -82,7 +86,8 @@ namespace WebApplication3.Repositories
         }
 
 
-        public async Task Delete(Player player) {
+        public async Task Delete(Player player)
+        {
             dbContext.Remove(player);
             await Save();
 

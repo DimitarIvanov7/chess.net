@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using WebApplication3.Data;
 using WebApplication3.Mappings;
-using WebApplication3.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.FileProviders;
 using Serilog;
 using WebApplication3.Middlewares;
 using WebApplication3.Hubs;
+using WebApplication3.Data.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);

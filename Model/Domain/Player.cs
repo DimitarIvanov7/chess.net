@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.Extensions.Hosting;
 
 namespace WebApplication3.Model.Domain
 {

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.Diagnostics.Contracts;
-
+﻿
 namespace WebApplication3.Model.Domain
 {
     public class Thread

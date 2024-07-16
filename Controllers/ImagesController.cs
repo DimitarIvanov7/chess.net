@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication3.Model.DTO;
 using WebApplication3.Model.Domain;
-using WebApplication3.Repositories;
+using WebApplication3.Data.Repositories;
 
 
 namespace WebApplication3.Controllers

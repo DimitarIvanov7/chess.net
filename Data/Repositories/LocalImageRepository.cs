@@ -3,7 +3,7 @@ using System.Net;
 using WebApplication3.Data;
 using WebApplication3.Model.Domain;
 
-namespace WebApplication3.Repositories
+namespace WebApplication3.Data.Repositories
 {
     public class LocalImageRepository : IimageRepository
     {
@@ -12,7 +12,7 @@ namespace WebApplication3.Repositories
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly ChessDbContext chessDbContext;
 
-        public LocalImageRepository(IWebHostEnvironment webHostEnviroment, IHttpContextAccessor httpContextAccessor, ChessDbContext chessDbContext) 
+        public LocalImageRepository(IWebHostEnvironment webHostEnviroment, IHttpContextAccessor httpContextAccessor, ChessDbContext chessDbContext)
         {
 
             this.webHostEnviroment = webHostEnviroment;
@@ -31,7 +31,7 @@ namespace WebApplication3.Repositories
             var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Images/{image.FileName}";
             image.FilePath = urlFilePath;
 
-             await chessDbContext.AddAsync(image);
+            await chessDbContext.AddAsync(image);
 
             await chessDbContext.SaveChangesAsync();
 

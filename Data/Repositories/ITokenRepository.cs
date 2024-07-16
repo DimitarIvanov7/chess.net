@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace WebApplication3.Repositories
+namespace WebApplication3.Data.Repositories
 {
     public interface ITokenRepository
     {

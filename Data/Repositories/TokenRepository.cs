@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace WebApplication3.Repositories
+namespace WebApplication3.Data.Repositories
 {
     public class TokenRepository : ITokenRepository
     {
@@ -21,7 +21,8 @@ namespace WebApplication3.Repositories
 
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
-            foreach (var role in roles) {
+            foreach (var role in roles)
+            {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 

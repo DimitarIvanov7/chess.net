@@ -4,9 +4,9 @@ using WebApplication3.Data;
 using WebApplication3.Model.Domain;
 using WebApplication3.Model.DTO;
 
-namespace WebApplication3.Repositories
+namespace WebApplication3.Data.Repositories
 {
-    public class GameRepositorySql 
+    public class GameRepositorySql
     {
         private readonly ChessDbContext dbContext;
 
