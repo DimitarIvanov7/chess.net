@@ -1,16 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using WebApplication3.Data;
-using WebApplication3.Mappings;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
-using WebApplication3.Middlewares;
-using WebApplication3.Hubs;
-using WebApplication3.Data.Repositories;
+using WebApplication3.Domain.Abstractions.Data;
+using WebApplication3.Domain.Hubs;
+using WebApplication3.WebApi.Middlewares;
+using WebApplication3.WebApi.Mappings;
+using WebApplication3.Domain.Database.DbContexts;
+using WebApplication3.Domain.Features.Auth.Repository;
+using WebApplication3.Domain.Features.Images.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,7 +90,17 @@ UseSqlServer(builder.Configuration.GetConnectionString("ChessAuthConnectionStrin
 builder.Services.AddSignalR();
 
 
-builder.Services.AddScoped<IPlayerRepository, PlayerRepositoryMySql>();
+
+builder.Services.AddScoped<IApplicationDbContext>(sp =>
+           sp.GetRequiredService<ApplicationDbContext>());
+
+builder.Services.AddScoped(sp =>
+    sp.GetRequiredService<ApplicationDbContext>());
+
+
+builder.Services.AddScoped<Gamerep>(sp =>
+    sp.GetRequiredService<ApplicationDbContext>());
+
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IimageRepository, LocalImageRepository>();
 
@@ -145,7 +157,6 @@ app.UseStaticFiles(new StaticFileOptions {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
     RequestPath = "/Images"
 });
-
 
 
 app.UseEndpoints(endpoints =>
