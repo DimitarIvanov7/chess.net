@@ -1,10 +1,11 @@
 ﻿
 
+using WebApplication3.Domain.Database;
 using WebApplication3.Domain.Features.Players.Entities;
 
 namespace WebApplication3.Domain.Features.Messages.Entities
 {
-    public class MessageEntity
+    public class MessageEntity: IEntity
     {
 
         public Guid Id { get; set; }

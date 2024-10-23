@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using WebApplication3.Domain.Database;
 
 namespace WebApplication3.Domain.Features.Images.Entities
 {
-    public class ImageEntity
+    public class ImageEntity: IEntity
     {
 
         public Guid Id { get; set; }

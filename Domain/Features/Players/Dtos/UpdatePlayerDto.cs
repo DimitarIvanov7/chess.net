@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebApplication3.Model.Validation;
+using WebApplication3.WebApi.Validation;
 
 namespace WebApplication3.Domain.Features.Players.Dtos
 {

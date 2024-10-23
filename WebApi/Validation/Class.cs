@@ -1,11 +1,11 @@
 ﻿
 
-    using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace WebApplication3.Model.Validation
-{ 
+namespace WebApplication3.WebApi.Validation
+{
     public class PasswordComplexityAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)

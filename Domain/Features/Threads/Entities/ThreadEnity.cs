@@ -1,10 +1,11 @@
 ﻿
+using WebApplication3.Domain.Database;
 using WebApplication3.Domain.Features.Messages.Entities;
 using WebApplication3.Domain.Features.Players.Entities;
 
 namespace WebApplication3.Domain.Features.Threads.Entities
 {
-    public class ThreadEntity
+    public class ThreadEntity : IEntity
     {
 
         public Guid Id { get; set; }

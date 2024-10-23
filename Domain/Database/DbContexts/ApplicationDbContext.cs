@@ -1,5 +1,4 @@
-﻿using Domain.Primitives;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using WebApplication3.Domain.Abstractions.Data;
 using WebApplication3.Domain.Features.Friends.Entities;
@@ -40,15 +39,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         var domainEvents = ChangeTracker
             .Entries<IEntity>()
             .Select(e => e.Entity)
-            .Where(e => e.GetDomainEvents().Any())
-            .SelectMany(e =>
-            {
-                var domainEvents = e.GetDomainEvents();
-
-                e.ClearDomainEvents();
-
-                return domainEvents;
-            })
             .ToList();
 
         var result = await base.SaveChangesAsync(cancellationToken);

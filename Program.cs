@@ -13,6 +13,13 @@ using WebApplication3.WebApi.Mappings;
 using WebApplication3.Domain.Database.DbContexts;
 using WebApplication3.Domain.Features.Auth.Repository;
 using WebApplication3.Domain.Features.Images.Repository;
+using WebApplication3.Domain.Features.Games.Repository;
+using WebApplication3.Domain.Features.Games.Entities;
+
+using WebApplication3.Domain.Data.Repositories;
+using WebApplication3.Domain.Features.Players.Repository;
+using WebApplication3.Domain.Features.Players.Entities;
+using WebApplication3.Domain.Features.Messages.Entities;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,7 +82,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] )),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
 
 
     } );
@@ -98,8 +105,14 @@ builder.Services.AddScoped(sp =>
     sp.GetRequiredService<ApplicationDbContext>());
 
 
-builder.Services.AddScoped<Gamerep>(sp =>
-    sp.GetRequiredService<ApplicationDbContext>());
+//builder.Services.AddScoped<Dbcontext>(sp =>
+//    sp.GetRequiredService<ApplicationDbContext>());
+
+builder.Services.AddScoped<IRepository<GameEntity>, GameRepositorySql>();
+builder.Services.AddScoped<IRepository<PlayerEntity>, PlayerRepositoryMySql>();
+//builder.Services.AddScoped<IRepository<MessageEntity>, Message>();
+
+
 
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IimageRepository, LocalImageRepository>();
@@ -133,6 +146,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+    //app.UseSwaggerUI(c =>
+    //{
+    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    //    c.RoutePrefix = "";
+    //});
     app.UseSwaggerUI();
 
 

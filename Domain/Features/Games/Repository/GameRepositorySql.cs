@@ -1,31 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Xml;
 using WebApplication3.Domain.Data.Repositories;
+using WebApplication3.Domain.Database;
 using WebApplication3.Domain.Database.DbContexts;
-using WebApplication3.Domain.Features.Players.Entities;
+using WebApplication3.Domain.Features.Games.Entities;
 using WebApplication3.Model.DTO;
 
 namespace WebApplication3.Domain.Features.Games.Repository
 {
-    internal sealed class GameRepositorySql : Repository<PlayerEntity>
+    internal sealed class GameRepositorySql : Repository<GameEntity>
     {
         public GameRepositorySql(ApplicationDbContext dbContext) : base(dbContext)
         {
-
         }
 
-
-        public async Task<List<PlayerEntity>> GetListAsync<Entity>(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
+        public async override Task<List<GameEntity>> GetListAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
         {
-            var players = DbContext.Players.AsQueryable();
+            var games = DbContext.Games.AsQueryable();
 
             if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
             {
 
 
-                if (filterOn.Equals("Username", StringComparison.OrdinalIgnoreCase))
+                if (filterOn.Equals("GameType", StringComparison.OrdinalIgnoreCase))
                 {
-                    players = players.Where(x => x.Username.Contains(filterQuery));
+                    games = games.Where(x => x.GameType.Equals(filterQuery));
                 }
 
 
@@ -35,14 +34,14 @@ namespace WebApplication3.Domain.Features.Games.Repository
             if (string.IsNullOrWhiteSpace(sortBy) == false)
             {
 
-                if (sortBy.Equals("UserName", StringComparison.OrdinalIgnoreCase))
+                if (sortBy.Equals("GameTime", StringComparison.OrdinalIgnoreCase))
                 {
-                    players = isAscending ? players.OrderBy(x => x.Username) : players.OrderByDescending(x => x.Username);
+                    games = isAscending ? games.OrderBy(x => x.GameTime) : games.OrderByDescending(x => x.GameTime);
 
                 }
-                else if (sortBy.Equals("Email", StringComparison.OrdinalIgnoreCase))
+                else if (sortBy.Equals("GameType", StringComparison.OrdinalIgnoreCase))
                 {
-                    players = isAscending ? players.OrderBy(x => x.Email) : players.OrderByDescending(x => x.Email);
+                    games = isAscending ? games.OrderBy(x => x.GameType) : games.OrderByDescending(x => x.GameType);
 
 
                 }
@@ -54,7 +53,7 @@ namespace WebApplication3.Domain.Features.Games.Repository
 
             int skipResults = (pageNumber - 1) * pageSize;
 
-            return await players.Skip(skipResults).Take(pageSize).ToListAsync();
+            return await games.Skip(skipResults).Take(pageSize).ToListAsync();
         }
 
 

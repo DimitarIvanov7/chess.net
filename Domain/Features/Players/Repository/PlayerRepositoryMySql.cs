@@ -7,7 +7,7 @@ using WebApplication3.Model.DTO;
 
 namespace WebApplication3.Domain.Features.Players.Repository
 {
-    internal sealed class PlayerRepositoryMySql : Repository<PlayerEntity>, IPlayerRepository
+    internal sealed class PlayerRepositoryMySql : Repository<PlayerEntity>
     {
 
 
@@ -16,7 +16,7 @@ namespace WebApplication3.Domain.Features.Players.Repository
         }
 
 
-        public async Task<List<PlayerEntity>> GetListAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
+        public async override Task<List<PlayerEntity>> GetListAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
         {
 
             var players = DbContext.Players.AsQueryable();

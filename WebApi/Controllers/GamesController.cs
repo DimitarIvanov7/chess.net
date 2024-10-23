@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication3.Domain.Data.Repositories;
+using WebApplication3.Domain.Features.Games.Entities;
 using WebApplication3.Domain.Features.Players.Repository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -8,14 +10,14 @@ namespace WebApplication3.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GamesController : ControllerBase
+    internal sealed class GamesController : ControllerBase
     {
 
-        private readonly IPlayerRepository GameRepository;
+        private readonly IRepository<GameEntity> GameRepository;
         private readonly IMapper mapper;
         private readonly ILogger<GamesController> logger;
 
-        public GamesController(IPlayerRepository gameRepository, IMapper mapper, ILogger<GamesController> logger)
+        public GamesController(IRepository<GameEntity> gameRepository, IMapper mapper, ILogger<GamesController> logger)
 
         {
             GameRepository = gameRepository;

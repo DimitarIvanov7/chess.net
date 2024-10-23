@@ -17,13 +17,13 @@ namespace WebApplication3.WebApi.Controllers
 
     internal sealed class PlayerController : Controller
     {
-        private readonly Repository<PlayerEntity> playerRepository;
+        private readonly IRepository<PlayerEntity> playerRepository;
         private readonly IMapper mapper;
         private readonly ILogger<PlayerController> logger;
         private readonly IUnitOfWork unitOfWork;
 
 
-        public PlayerController(Repository<PlayerEntity> playerRepository, IMapper mapper, ILogger<PlayerController> logger, IUnitOfWork unitOfWork)
+        public PlayerController(IRepository<PlayerEntity> playerRepository, IMapper mapper, ILogger<PlayerController> logger, IUnitOfWork unitOfWork)
 
         {
             this.playerRepository = playerRepository;
