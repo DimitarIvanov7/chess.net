@@ -10,14 +10,14 @@ namespace WebApplication3.Domain.Features.Images.Repository
 
         private readonly IWebHostEnvironment webHostEnviroment;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ChessDbContext chessDbContext;
+        private readonly ApplicationDbContext applicationDbContext;
 
-        public LocalImageRepository(IWebHostEnvironment webHostEnviroment, IHttpContextAccessor httpContextAccessor, ChessDbContext chessDbContext)
+        public LocalImageRepository(IWebHostEnvironment webHostEnviroment, IHttpContextAccessor httpContextAccessor, ApplicationDbContext applicationDbContext)
         {
 
             this.webHostEnviroment = webHostEnviroment;
             this.httpContextAccessor = httpContextAccessor;
-            this.chessDbContext = chessDbContext;
+            this.applicationDbContext = applicationDbContext;
         }
 
         public async Task<ImageEntity> Upload(ImageEntity image)
@@ -31,9 +31,9 @@ namespace WebApplication3.Domain.Features.Images.Repository
             var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Images/{image.FileName}";
             image.FilePath = urlFilePath;
 
-            await chessDbContext.AddAsync(image);
+            await applicationDbContext.AddAsync(image);
 
-            await chessDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync();
 
             return image;
 

@@ -3,7 +3,6 @@ using WebApplication3.Domain.Features.Friends.Entities;
 using WebApplication3.Domain.Features.Games.Entities;
 using WebApplication3.Domain.Features.Players.Entities;
 using WebApplication3.Domain.Features.Messages.Entities;
-using WebApplication3.Domain.Features.Threads.Entities;
 
 
 namespace WebApplication3.Domain.Abstractions.Data;
@@ -18,5 +17,4 @@ public interface IApplicationDbContext
 
     DbSet<MessageEntity> Messages { get; set; }
 
-    DbSet<ThreadEntity> Threads { get; set; }
 }

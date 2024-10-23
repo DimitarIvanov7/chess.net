@@ -9,7 +9,8 @@ namespace WebApplication3.Model.Domain.Games.Entities
 
         public Guid Id { get; set; }
 
-        public PlayStateSubTypes Type { get; set; }
+        public PlayStateTypes Type { get; set; }
+        public PlayStateSubTypes SubType { get; set; }
 
 
 

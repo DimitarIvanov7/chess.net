@@ -15,15 +15,15 @@ namespace WebApplication3.WebApi.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly ITokenRepository tokenRepostitory;
         private readonly IMapper mapper;
-        private readonly IUnitOfWork unitOfWork;
+        //private readonly IUnitOfWork unitOfWork;
 
 
-        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepostitory, IMapper mapper, IUnitOfWork unitOfWork)
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepostitory, IMapper mapper)
         {
             this.userManager = userManager;
             this.tokenRepostitory = tokenRepostitory;
             this.mapper = mapper;
-            this.unitOfWork = unitOfWork;
+            //this.unitOfWork = unitOfWork;
         }
 
         [HttpPost]

@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="12.4.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
@@ -36,9 +37,6 @@
     <Folder Include="Domain\Features\Auth\Mappings\" />
     <Folder Include="Domain\Features\Messages\Mappings\" />
     <Folder Include="Domain\Features\Messages\Repository\" />
-    <Folder Include="Domain\Features\Threads\Dtos\" />
-    <Folder Include="Domain\Features\Threads\Mappings\" />
-    <Folder Include="Domain\Features\Threads\Repository\" />
     <Folder Include="Domain\Features\Games\Mappings\" />
     <Folder Include="Images\" />
   </ItemGroup>

@@ -14,13 +14,11 @@ namespace WebApplication3.Domain.Features.Messages.Entities
 
         public Guid ReceiverId { get; set; }
 
-        public Guid ThreadId { get; set; }  
         public string Data { get; set; } 
 
         public PlayerEntity Sender { get; set; }
         public PlayerEntity Receiver { get; set; }
 
-        public Thread Thread { get; set; }
 
 
     }

@@ -13,23 +13,23 @@ using WebApplication3.Model.DTO.PlayerDto;
 namespace WebApplication3.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
 
-    internal sealed class PlayerController : Controller
+    public class PlayerController : Controller
     {
         private readonly IRepository<PlayerEntity> playerRepository;
         private readonly IMapper mapper;
         private readonly ILogger<PlayerController> logger;
-        private readonly IUnitOfWork unitOfWork;
+        //private readonly IUnitOfWork unitOfWork;
 
 
-        public PlayerController(IRepository<PlayerEntity> playerRepository, IMapper mapper, ILogger<PlayerController> logger, IUnitOfWork unitOfWork)
+        PlayerController(IRepository<PlayerEntity> playerRepository, IMapper mapper, ILogger<PlayerController> logger)
 
         {
             this.playerRepository = playerRepository;
             this.mapper = mapper;
             this.logger = logger;
-            this.unitOfWork = unitOfWork;
+            //this.unitOfWork = unitOfWork;
         }
 
 

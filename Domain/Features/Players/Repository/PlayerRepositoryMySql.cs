@@ -9,8 +9,6 @@ namespace WebApplication3.Domain.Features.Players.Repository
 {
     internal sealed class PlayerRepositoryMySql : Repository<PlayerEntity>
     {
-
-
         public PlayerRepositoryMySql(ApplicationDbContext dbContext) : base(dbContext)
         {
         }

@@ -1,27 +1,62 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApplication3.Domain.Abstractions.Data;
 using WebApplication3.Domain.Features.Friends.Entities;
 using WebApplication3.Domain.Features.Games.Entities;
 using WebApplication3.Domain.Features.Messages.Entities;
 using WebApplication3.Domain.Features.Players.Entities;
-using WebApplication3.Domain.Features.Threads.Entities;
 
 namespace WebApplication3.Domain.Database.DbContexts;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    private readonly IPublisher _publisher;
 
-    public ApplicationDbContext(DbContextOptions options, IPublisher publisher)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
-        _publisher = publisher;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.Ignore<System.Globalization.CultureInfo>();
+
+        // Configure the Games and Players relationship
+        modelBuilder.Entity<GameEntity>()
+            .HasOne(g => g.BlackPlayer)
+            .WithMany()
+            .HasForeignKey(g => g.BlackPlayerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<GameEntity>()
+            .HasOne(g => g.WhitePlayer)
+            .WithMany()
+            .HasForeignKey(g => g.WhitePlayerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<GameEntity>()
+            .HasOne(g => g.Winner)
+            .WithMany()
+            .HasForeignKey(g => g.WinnerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<GameEntity>()
+            .HasOne(g => g.GameType)
+            .WithMany()
+            .HasForeignKey(g => g.GameTypeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+        modelBuilder.Entity<FriendsEntity>()
+            .HasOne(g => g.PlayerOne)
+            .WithMany()
+            .HasForeignKey(g => g.PlayerOneId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<FriendsEntity>()
+            .HasOne(g => g.PlayerTwo)
+            .WithMany()
+            .HasForeignKey(g => g.PlayerTwoId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     public DbSet<PlayerEntity> Players { get; set; }
@@ -32,22 +67,4 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<MessageEntity> Messages { get; set; }
 
-    public DbSet<ThreadEntity> Threads { get; set; }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-    {
-        var domainEvents = ChangeTracker
-            .Entries<IEntity>()
-            .Select(e => e.Entity)
-            .ToList();
-
-        var result = await base.SaveChangesAsync(cancellationToken);
-
-        foreach (var domainEvent in domainEvents)
-        {
-            await _publisher.Publish(domainEvent, cancellationToken);
-        }
-
-        return result;
-    }
 }

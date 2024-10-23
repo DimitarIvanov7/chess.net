@@ -10,14 +10,14 @@ namespace WebApplication3.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    internal sealed class GamesController : ControllerBase
+    public class GamesController : ControllerBase
     {
 
         private readonly IRepository<GameEntity> GameRepository;
         private readonly IMapper mapper;
         private readonly ILogger<GamesController> logger;
 
-        public GamesController(IRepository<GameEntity> gameRepository, IMapper mapper, ILogger<GamesController> logger)
+        GamesController(IRepository<GameEntity> gameRepository, IMapper mapper, ILogger<GamesController> logger)
 
         {
             GameRepository = gameRepository;

@@ -20,6 +20,7 @@ using WebApplication3.Domain.Data.Repositories;
 using WebApplication3.Domain.Features.Players.Repository;
 using WebApplication3.Domain.Features.Players.Entities;
 using WebApplication3.Domain.Features.Messages.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -87,33 +88,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
     } );
 
+//builder.Services.AddMediatR(typeof(Startup));
 
-builder.Services.AddDbContext<ChessDbContext>(options => options.
-UseSqlServer(builder.Configuration.GetConnectionString("ChessConnectionString")));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 builder.Services.AddDbContext<AuthDbContext>(options => options.
 UseSqlServer(builder.Configuration.GetConnectionString("ChessAuthConnectionString")));
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.
+UseSqlServer(builder.Configuration.GetConnectionString("ApplicationConnectionString")));
 
 builder.Services.AddSignalR();
 
 
 
-builder.Services.AddScoped<IApplicationDbContext>(sp =>
-           sp.GetRequiredService<ApplicationDbContext>());
+//builder.Services.AddScoped<IApplicationDbContext>(sp =>
+//           sp.GetRequiredService<ApplicationDbContext>());
 
-builder.Services.AddScoped(sp =>
-    sp.GetRequiredService<ApplicationDbContext>());
-
-
-//builder.Services.AddScoped<Dbcontext>(sp =>
-//    sp.GetRequiredService<ApplicationDbContext>());
 
 builder.Services.AddScoped<IRepository<GameEntity>, GameRepositorySql>();
 builder.Services.AddScoped<IRepository<PlayerEntity>, PlayerRepositoryMySql>();
 //builder.Services.AddScoped<IRepository<MessageEntity>, Message>();
-
-
-
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IimageRepository, LocalImageRepository>();
 
@@ -135,7 +130,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
     options.Password.RequiredUniqueChars = 1;
-
 }
 
 );
@@ -146,11 +140,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    //app.UseSwaggerUI(c =>
-    //{
-    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    //    c.RoutePrefix = "";
-    //});
     app.UseSwaggerUI();
 
 
