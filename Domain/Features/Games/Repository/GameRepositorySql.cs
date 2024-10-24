@@ -8,11 +8,13 @@ using WebApplication3.Model.DTO;
 
 namespace WebApplication3.Domain.Features.Games.Repository
 {
-    internal sealed class GameRepositorySql : Repository<GameEntity>
+    public class GameRepositorySql : GenericRepository<GameEntity>
     {
         public GameRepositorySql(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
+
+
 
         public async override Task<List<GameEntity>> GetListAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
         {
@@ -24,7 +26,7 @@ namespace WebApplication3.Domain.Features.Games.Repository
 
                 if (filterOn.Equals("GameType", StringComparison.OrdinalIgnoreCase))
                 {
-                    games = games.Where(x => x.GameType.Equals(filterQuery));
+                    games = games.Where(x => x.GameStateType.Equals(filterQuery));
                 }
 
 
@@ -36,36 +38,22 @@ namespace WebApplication3.Domain.Features.Games.Repository
 
                 if (sortBy.Equals("GameTime", StringComparison.OrdinalIgnoreCase))
                 {
-                    games = isAscending ? games.OrderBy(x => x.GameTime) : games.OrderByDescending(x => x.GameTime);
+                    games = isAscending ? games.OrderBy(x => x.CreatedDate) : games.OrderByDescending(x => x.CreatedDate);
 
                 }
                 else if (sortBy.Equals("GameType", StringComparison.OrdinalIgnoreCase))
                 {
-                    games = isAscending ? games.OrderBy(x => x.GameType) : games.OrderByDescending(x => x.GameType);
-
+                    games = isAscending ? games.OrderBy(x => x.GameStateType) : games.OrderByDescending(x => x.GameStateType);
 
                 }
-
-
 
             }
 
 
             int skipResults = (pageNumber - 1) * pageSize;
 
-            return await games.Skip(skipResults).Take(pageSize).ToListAsync();
+            return await games.Skip(skipResults).Take(pageSize).Include(g => g.WhitePlayer).Include(g => g.WhitePlayer).ToListAsync();
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

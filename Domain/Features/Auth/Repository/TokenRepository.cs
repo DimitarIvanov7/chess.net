@@ -17,9 +17,11 @@ namespace WebApplication3.Domain.Features.Auth.Repository
 
         public string createJWT(IdentityUser user, List<string> roles)
         {
-            var claims = new List<Claim>();
-
-            claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
+            };
 
             foreach (var role in roles)
             {

@@ -8,7 +8,7 @@ namespace WebApplication3.Model.DTO.PlayerDto
         [Required]
         [MinLength(5, ErrorMessage = "User name must be at least 5 characters long")]
         [MaxLength(10, ErrorMessage = "User name must be less than 11 charactres long")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]

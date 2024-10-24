@@ -20,21 +20,20 @@ namespace WebApplication3.WebApi.Controllers
         private readonly IRepository<PlayerEntity> playerRepository;
         private readonly IMapper mapper;
         private readonly ILogger<PlayerController> logger;
-        //private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
 
-        PlayerController(IRepository<PlayerEntity> playerRepository, IMapper mapper, ILogger<PlayerController> logger)
+        public PlayerController(IRepository<PlayerEntity> playerRepository, IMapper mapper, ILogger<PlayerController> logger, IUnitOfWork unitOfWork)
 
         {
             this.playerRepository = playerRepository;
             this.mapper = mapper;
             this.logger = logger;
-            //this.unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
 
         [HttpGet]
-        [Authorize(Roles = "Reader,Writer")]
         public async Task<ActionResult> GetAllUsers([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy = null, [FromQuery] bool? isAscending = true, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
 
@@ -54,7 +53,6 @@ namespace WebApplication3.WebApi.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
-        [Authorize(Roles = "Reader, Writer")]
 
         public async Task<ActionResult<PlayerResponseDto>> GetPlayerById([FromRoute] Guid id)
         {
@@ -63,12 +61,33 @@ namespace WebApplication3.WebApi.Controllers
 
             if (playerDomain == null) return NotFound();
 
+            logger.LogInformation($"test: {JsonSerializer.Serialize(playerDomain)}");
+
+
 
             var playersDto = mapper.Map<PlayerResponseDto>(playerDomain);
+
+            logger.LogInformation($"Finished getUser method with data: {JsonSerializer.Serialize(playersDto)}");
+
 
             return Ok(playersDto);
 
 
+        }
+
+        [HttpGet]
+        [Route("{username}")]
+        public async Task<IActionResult> GetPlayerByName(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return BadRequest("Username cannot be null or empty.");
+
+            var player = await playerRepository.GetListAsync(filterOn: "Username", filterQuery: username);
+
+            if (player == null || !player.Any())
+                return NotFound("Player not found.");
+
+            return Ok(player.First());
         }
 
         [HttpPost]
@@ -83,8 +102,9 @@ namespace WebApplication3.WebApi.Controllers
 
             playerRepository.Add(playerDomainModel);
 
-            var createdPlayerDto = mapper.Map<PlayerResponseDto>(playerDomainModel);
+            await unitOfWork.SaveChangesAsync();
 
+            var createdPlayerDto = mapper.Map<PlayerResponseDto>(playerDomainModel);
 
             return CreatedAtAction(nameof(GetPlayerById),
                 new { id = createdPlayerDto.Id }, createdPlayerDto);
@@ -110,6 +130,8 @@ namespace WebApplication3.WebApi.Controllers
 
             playerRepository.Update(newPlayer);
 
+            await unitOfWork.SaveChangesAsync();
+
             var playerDto = mapper.Map<PlayerResponseDto>(newPlayer);
 
             return Ok(playerDto);
@@ -131,6 +153,8 @@ namespace WebApplication3.WebApi.Controllers
             if (foundPlayer == null) return NotFound();
 
             playerRepository.Remove(foundPlayer);
+
+            await unitOfWork.SaveChangesAsync();
 
             return Ok();
 

@@ -1,5 +1,4 @@
-﻿using WebApplication3.Model.Domain;
-using WebApplication3.Domain.Features.Players.Dtos;
+﻿using WebApplication3.Domain.Features.Players.Dtos;
 using WebApplication3.Domain.Constants;
 
 namespace WebApplication3.Domain.Features.Friends.Dtos
@@ -13,4 +12,21 @@ namespace WebApplication3.Domain.Features.Friends.Dtos
 
 
     }
+}
+
+public class ChangeFriendRequestStatusDto
+{
+    public Guid RequestId { get; set; }
+    public FriendStates Status { get; set; }
+}
+
+
+public class CreateFriendRequestDto
+{
+    public Guid ReceiverId { get; set; }
+}
+
+public class FriendFilterDto
+{
+    public FriendStates? Status { get; set; }
 }

@@ -31,14 +31,13 @@
 
   <ItemGroup>
     <Folder Include="Domain\Features\Friends\Mappings\" />
-    <Folder Include="Domain\Features\Friends\Repository\" />
     <Folder Include="Domain\Features\Images\Mappings\" />
     <Folder Include="Domain\Features\Auth\Entities\" />
     <Folder Include="Domain\Features\Auth\Mappings\" />
     <Folder Include="Domain\Features\Messages\Mappings\" />
-    <Folder Include="Domain\Features\Messages\Repository\" />
     <Folder Include="Domain\Features\Games\Mappings\" />
     <Folder Include="Images\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

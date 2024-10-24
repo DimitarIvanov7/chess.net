@@ -7,13 +7,17 @@ using WebApplication3.Model.DTO;
 
 namespace WebApplication3.Domain.Features.Players.Repository
 {
-    internal sealed class PlayerRepositoryMySql : Repository<PlayerEntity>
+    public class PlayerRepositoryMySql : GenericRepository<PlayerEntity>
     {
         public PlayerRepositoryMySql(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
-
+        public async Task<PlayerEntity?> GetByNameAsync(string username)
+        {
+            return await DbContext.Players
+                .FirstOrDefaultAsync(p => p.Username == username);
+        }
         public async override Task<List<PlayerEntity>> GetListAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 10)
         {
 

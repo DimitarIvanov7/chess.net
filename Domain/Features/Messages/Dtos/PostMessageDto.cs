@@ -1,10 +1,6 @@
-﻿namespace WebApplication3.Domain.Features.Messages.Dtos
+﻿public class CreateMessageDto
 {
-    public class PostMessageDto
-    {
-
-        public Guid ReceiverId { get; set; }
-
-        public string Message { get; set; }
-    }
+    public Guid ReceiverId { get; set; }
+    public string Message { get; set; }
 }
+

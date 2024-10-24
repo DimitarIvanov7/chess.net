@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication3.Domain.Abstractions.Data;
+using WebApplication3.Domain.Constants;
 using WebApplication3.Domain.Features.Friends.Entities;
 using WebApplication3.Domain.Features.Games.Entities;
 using WebApplication3.Domain.Features.Messages.Entities;
@@ -20,6 +21,23 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
         modelBuilder.Ignore<System.Globalization.CultureInfo>();
 
+
+        modelBuilder.Entity<GameEntity>(entity =>
+        {
+            entity.Property(e => e.CreatedDate)
+                  .HasDefaultValueSql("GETUTCDATE()");
+
+            entity.Property(e => e.GameStateType)
+                 .HasDefaultValue(PlayStateTypes.Pause);
+        });
+
+        modelBuilder.Entity<MessageEntity>(entity =>
+        {
+
+            entity.Property(e => e.SendDate)
+                 .HasDefaultValueSql("GETUTCDATE()");
+        });
+
         // Configure the Games and Players relationship
         modelBuilder.Entity<GameEntity>()
             .HasOne(g => g.BlackPlayer)
@@ -39,13 +57,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .HasForeignKey(g => g.WinnerId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity<GameEntity>()
-            .HasOne(g => g.GameType)
-            .WithMany()
-            .HasForeignKey(g => g.GameTypeId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-
         modelBuilder.Entity<FriendsEntity>()
             .HasOne(g => g.PlayerOne)
             .WithMany()
@@ -57,6 +68,31 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             .WithMany()
             .HasForeignKey(g => g.PlayerTwoId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<MessageEntity>()
+            .HasOne(g => g.Sender)
+            .WithMany()
+            .HasForeignKey(g => g.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<MessageEntity>()
+            .HasOne(g => g.Receiver)
+            .WithMany()
+            .HasForeignKey(g => g.ReceiverId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        modelBuilder.Entity<PlayerEntity>()
+            .HasMany(p => p.WhiteGames)
+            .WithOne(g => g.WhitePlayer)
+            .HasForeignKey(g => g.WhitePlayerId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<PlayerEntity>()
+            .HasMany(p => p.BlackGames)
+            .WithOne(g => g.BlackPlayer)
+            .HasForeignKey(g => g.BlackPlayerId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 
     public DbSet<PlayerEntity> Players { get; set; }

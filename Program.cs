@@ -9,7 +9,6 @@ using Serilog;
 using WebApplication3.Domain.Abstractions.Data;
 using WebApplication3.Domain.Hubs;
 using WebApplication3.WebApi.Middlewares;
-using WebApplication3.WebApi.Mappings;
 using WebApplication3.Domain.Database.DbContexts;
 using WebApplication3.Domain.Features.Auth.Repository;
 using WebApplication3.Domain.Features.Images.Repository;
@@ -20,7 +19,11 @@ using WebApplication3.Domain.Data.Repositories;
 using WebApplication3.Domain.Features.Players.Repository;
 using WebApplication3.Domain.Features.Players.Entities;
 using WebApplication3.Domain.Features.Messages.Entities;
+using WebApplication3.Domain.Features.Messages.Repository;
+
 using Microsoft.Extensions.DependencyInjection;
+using WebApplication3.Domain.Database;
+using WebApplication3.Domain.Mappings;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,7 +91,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
     } );
 
-//builder.Services.AddMediatR(typeof(Startup));
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
@@ -101,14 +103,13 @@ UseSqlServer(builder.Configuration.GetConnectionString("ApplicationConnectionStr
 builder.Services.AddSignalR();
 
 
-
-//builder.Services.AddScoped<IApplicationDbContext>(sp =>
-//           sp.GetRequiredService<ApplicationDbContext>());
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<GamesHelpers>();
 
 
 builder.Services.AddScoped<IRepository<GameEntity>, GameRepositorySql>();
 builder.Services.AddScoped<IRepository<PlayerEntity>, PlayerRepositoryMySql>();
-//builder.Services.AddScoped<IRepository<MessageEntity>, Message>();
+builder.Services.AddScoped<MessagesRepositorySql>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IimageRepository, LocalImageRepository>();
 

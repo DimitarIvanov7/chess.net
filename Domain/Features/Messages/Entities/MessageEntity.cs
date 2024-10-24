@@ -14,12 +14,19 @@ namespace WebApplication3.Domain.Features.Messages.Entities
 
         public Guid ReceiverId { get; set; }
 
-        public string Data { get; set; } 
+        public string Message { get; set; } 
+
+        public DateTime SendDate { get; set; }
 
         public PlayerEntity Sender { get; set; }
         public PlayerEntity Receiver { get; set; }
 
 
+
+        public MessageEntity()
+        {
+            SendDate = DateTime.UtcNow;
+        }
 
     }
 }

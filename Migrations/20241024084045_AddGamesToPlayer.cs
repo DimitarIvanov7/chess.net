@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace WebApplication3.Migrations.ApplicationDb
+namespace WebApplication3.Migrations
 {
     /// <inheritdoc />
-    public partial class TestMigration3 : Migration
+    public partial class AddGamesToPlayer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

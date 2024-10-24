@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApplication3.Domain.Database.DbContexts;
 
 #nullable disable
 
-namespace WebApplication3.Migrations.ApplicationDb
+namespace WebApplication3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241023164931_TestMigration8")]
-    partial class TestMigration8
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,26 +52,31 @@ namespace WebApplication3.Migrations.ApplicationDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BlackPlayerId")
+                    b.Property<Guid?>("BlackPlayerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("GameTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid>("GameTypeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("GameStateSubType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameStateType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(3);
 
                     b.Property<Guid>("WhitePlayerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("WinnerId")
+                    b.Property<Guid?>("WinnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BlackPlayerId");
-
-                    b.HasIndex("GameTypeId");
 
                     b.HasIndex("WhitePlayerId");
 
@@ -89,12 +91,17 @@ namespace WebApplication3.Migrations.ApplicationDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Data")
+                    b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ReceiverId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SendDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid>("SenderId")
                         .HasColumnType("uniqueidentifier");
@@ -117,30 +124,21 @@ namespace WebApplication3.Migrations.ApplicationDb
                     b.Property<int>("Elo")
                         .HasColumnType("int");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Players");
-                });
-
-            modelBuilder.Entity("WebApplication3.Model.Domain.Games.Entities.GameTypeEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("SubType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GameTypeEntity");
                 });
 
             modelBuilder.Entity("WebApplication3.Domain.Features.Friends.Entities.FriendsEntity", b =>
@@ -165,19 +163,12 @@ namespace WebApplication3.Migrations.ApplicationDb
             modelBuilder.Entity("WebApplication3.Domain.Features.Games.Entities.GameEntity", b =>
                 {
                     b.HasOne("WebApplication3.Domain.Features.Players.Entities.PlayerEntity", "BlackPlayer")
-                        .WithMany()
+                        .WithMany("BlackGames")
                         .HasForeignKey("BlackPlayerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("WebApplication3.Model.Domain.Games.Entities.GameTypeEntity", "GameType")
-                        .WithMany()
-                        .HasForeignKey("GameTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("WebApplication3.Domain.Features.Players.Entities.PlayerEntity", "WhitePlayer")
-                        .WithMany()
+                        .WithMany("WhiteGames")
                         .HasForeignKey("WhitePlayerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -185,12 +176,9 @@ namespace WebApplication3.Migrations.ApplicationDb
                     b.HasOne("WebApplication3.Domain.Features.Players.Entities.PlayerEntity", "Winner")
                         .WithMany()
                         .HasForeignKey("WinnerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("BlackPlayer");
-
-                    b.Navigation("GameType");
 
                     b.Navigation("WhitePlayer");
 
@@ -202,18 +190,25 @@ namespace WebApplication3.Migrations.ApplicationDb
                     b.HasOne("WebApplication3.Domain.Features.Players.Entities.PlayerEntity", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("WebApplication3.Domain.Features.Players.Entities.PlayerEntity", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Receiver");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("WebApplication3.Domain.Features.Players.Entities.PlayerEntity", b =>
+                {
+                    b.Navigation("BlackGames");
+
+                    b.Navigation("WhiteGames");
                 });
 #pragma warning restore 612, 618
         }

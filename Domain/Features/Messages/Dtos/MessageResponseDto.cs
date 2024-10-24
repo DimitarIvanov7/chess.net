@@ -1,17 +1,12 @@
-﻿using WebApplication3.Domain.Features.Players.Entities;
+﻿using WebApplication3.Domain.Features.Players.Dtos;
 
-namespace WebApplication3.Domain.Features.Messages.Dtos
+public class MessageResponseDto
 {
-    public class MessageResponseDto
-    {
-
-        public PlayerEntity Sender { get; set; }
-
-        public DateTime DateTime { get; set; }
-
-        public string Message { get; set; }
+    public Guid Id { get; set; }
+    public PlayerResponseDto Sender { get; set; }
+    public PlayerResponseDto Receiver { get; set; }
+    public string Message { get; set; }
+    public DateTime SentDate { get; set; }
 
 
-
-    }
 }

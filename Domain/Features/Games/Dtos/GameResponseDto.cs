@@ -5,7 +5,6 @@ namespace WebApplication3.Domain.Features.Games.Dtos
 {
     public class GameResponseDto
     {
-
         public Guid Id { get; set; }
 
         public PlayerResponseDto WhitePlayer { get; set; }
@@ -13,11 +12,9 @@ namespace WebApplication3.Domain.Features.Games.Dtos
 
         public Guid WinnerId { get; set; }
 
-        public PlayStateSubTypes GameType { get; set; }
+        public PlayStateTypes GameStateType { get; set; }
+        public PlayStateSubTypes GameStateSubType { get; set; }
         public DateTime DateTime { get; set; }
-
-
-
 
     }
 }

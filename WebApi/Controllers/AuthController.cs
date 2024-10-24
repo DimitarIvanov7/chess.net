@@ -4,7 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using WebApplication3.Domain.Abstractions.Data;
 using WebApplication3.Domain.Features.Auth.Dtos;
 using WebApplication3.Domain.Features.Auth.Repository;
+using WebApplication3.Domain.Features.Players.Entities;
+using WebApplication3.Domain.Data.Repositories;
+
 using WebApplication3.Model.DTO.PlayerDto;
+using WebApplication3.Domain.Features.Players.Repository;
+using System.Text.Json;
 
 namespace WebApplication3.WebApi.Controllers
 {
@@ -14,30 +19,32 @@ namespace WebApplication3.WebApi.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly ITokenRepository tokenRepostitory;
+        private readonly IRepository<PlayerEntity> playersRepository;
         private readonly IMapper mapper;
-        //private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly ILogger<AuthController> logger;
 
-
-        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepostitory, IMapper mapper)
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepostitory, IMapper mapper, IRepository<PlayerEntity> playersRepository, IUnitOfWork unitOfWork, ILogger<AuthController> logger)
         {
             this.userManager = userManager;
             this.tokenRepostitory = tokenRepostitory;
             this.mapper = mapper;
-            //this.unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork;
+            this.playersRepository = playersRepository;
+            this.logger = logger;
         }
+
 
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] AddPlayerDto player)
         {
-
-
             if (player == null)
                 return BadRequest();
 
             var identityUser = new IdentityUser
             {
-                UserName = player.UserName,
+                UserName = player.Username,
                 Email = player.Email,
             };
 
@@ -52,7 +59,22 @@ namespace WebApplication3.WebApi.Controllers
 
                     if (identityResult.Succeeded)
                     {
-                        return Ok("Register succesfull, please login!");
+
+                        //create player
+                        var playerEntity = mapper.Map<PlayerEntity>(player);
+                        playerEntity.Id = Guid.Parse(identityUser.Id);
+
+                        playersRepository.Add(playerEntity);
+                        await unitOfWork.SaveChangesAsync();
+                        logger.LogInformation($"Finished register method with data: {JsonSerializer.Serialize(player)}");
+
+
+                        return Ok($"Register succesfull, please login! {playerEntity.Id}");
+                    }
+                    else
+                    {
+                        return BadRequest("One or more roles provided do not exist.");
+
                     }
 
                 }
@@ -67,14 +89,11 @@ namespace WebApplication3.WebApi.Controllers
 
         [HttpPost]
         [Route("Login")]
-
-        //[SwaggerResponse(System.Net.HttpStatusCode.OK, Type = typeof(LoginResponseDto))]
-
         public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto loginDto)
         {
 
 
-            var user = await userManager.FindByNameAsync(loginDto.UserName);
+            var user = await userManager.FindByNameAsync(loginDto.Username);
 
 
             if (user != null)

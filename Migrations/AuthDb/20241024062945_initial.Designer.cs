@@ -12,8 +12,8 @@ using WebApplication3.Domain.Database.DbContexts;
 namespace WebApplication3.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20240706125109_Add authentication roles")]
-    partial class Addauthenticationroles
+    [Migration("20241024062945_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

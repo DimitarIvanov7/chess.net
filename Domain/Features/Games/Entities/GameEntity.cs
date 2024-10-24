@@ -1,8 +1,8 @@
 ﻿
 
+using WebApplication3.Domain.Constants;
 using WebApplication3.Domain.Database;
 using WebApplication3.Domain.Features.Players.Entities;
-using WebApplication3.Model.Domain.Games.Entities;
 
 namespace WebApplication3.Domain.Features.Games.Entities
 {
@@ -11,20 +11,28 @@ namespace WebApplication3.Domain.Features.Games.Entities
         public Guid Id { get; set; }
         public Guid WhitePlayerId { get; set; }
 
-        public Guid BlackPlayerId { get; set; }
+        public Guid? BlackPlayerId { get; set; }
 
-        public Guid WinnerId { get; set; }
+        public Guid? WinnerId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public PlayStateTypes GameStateType { get; set; }
 
-        public Guid GameTypeId { get; set; }
-        public DateTime GameTime { get; set; }
+        public PlayStateSubTypes? GameStateSubType { get; set; }
 
-        public PlayerEntity WhitePlayer { get; set;  }
+        public virtual PlayerEntity WhitePlayer { get; set;  }
 
-        public PlayerEntity BlackPlayer { get; set; }
+        public virtual PlayerEntity? BlackPlayer { get; set; }
 
-        public PlayerEntity Winner { get; set; }
+        public virtual PlayerEntity? Winner { get; set; }
 
-        public GameTypeEntity GameType { get; set; }
+        
+
+
+        public GameEntity()
+        {
+            CreatedDate = DateTime.UtcNow;
+            GameStateType = PlayStateTypes.Pause;
+        }
 
 
     }

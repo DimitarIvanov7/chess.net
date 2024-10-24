@@ -13,7 +13,7 @@ namespace WebApplication3.Domain.Features.Friends.Entities
 
         public Guid PlayerTwoId { get; set; }
 
-        public FriendStates States { get; set; }
+        public FriendStates Status { get; set; }
 
         public PlayerEntity PlayerOne { get; set; }
 

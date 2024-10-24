@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace WebApplication3.Migrations.AuthDb
+namespace WebApplication3.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateAuthenticationTable : Migration
+    public partial class AddGamesToPlayer2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
