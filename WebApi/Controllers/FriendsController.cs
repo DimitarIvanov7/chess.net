@@ -16,10 +16,10 @@ namespace WebApplication3.WebApi.Controllers
     [Route("api/[controller]")]
     public class FriendsController : BaseController
     {
-        private readonly IRepository<FriendsEntity> friendsRepository;
+        private readonly FriendsRepositorySql friendsRepository;
         private readonly IUnitOfWork unitOfWork;
 
-        public FriendsController(IRepository<FriendsEntity> friendsRepository, IRepository<PlayerEntity> playersRepository, IUnitOfWork unitOfWork)
+        public FriendsController(FriendsRepositorySql friendsRepository, IRepository<PlayerEntity> playersRepository, IUnitOfWork unitOfWork)
             : base(playersRepository)
         {
             this.friendsRepository = friendsRepository;
@@ -35,7 +35,7 @@ namespace WebApplication3.WebApi.Controllers
             if (currentPlayer == null)
                 return NotFound("Player not found");
 
-            var friends = await friendsRepository.GetListAsync();
+            var friends = await friendsRepository.GetListByIdAsync(currentPlayer.Id);
             var filteredFriends = friends.Where(f =>
                 (f.PlayerOneId == currentPlayer.Id || f.PlayerTwoId == currentPlayer.Id) &&
                 (filterDto.Status == null || f.Status == filterDto.Status)
